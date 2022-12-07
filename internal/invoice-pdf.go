@@ -24,6 +24,12 @@ type cellStyle struct {
 	Indent          float64
 }
 
+// var EUCJP encoding.Encoding = &eucJP
+// var ISO2022JP encoding.Encoding = &iso2022JP
+// var ShiftJIS encoding.Encoding = &shiftJIS
+
+// var All = []encoding.Encoding{EUCJP, ISO2022JP, ShiftJIS}
+
 var cellStyles = map[string]cellStyle{
 	"heading-left": {
 		BackgroundColor: creator.ColorRGBFromHex("#332f3f"),
@@ -121,7 +127,7 @@ func (c *Client) generatePdf(invoice Invoice) error {
 
 	table := c.creator.NewTable(1)
 	table.SetMargins(0, 0, 20, 0)
-	err = drawCell(table, c.newPara("Sample Invoice", headerStyle), cellStyles["centered"])
+	err = drawCell(table, c.newPara("森のくまさん", headerStyle), cellStyles["centered"])
 	if err != nil {
 		return err
 	}
