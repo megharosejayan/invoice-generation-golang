@@ -7,6 +7,7 @@ import (
 	"github.com/megharosejayan/invoice-generation-golang/config"
 	"github.com/unidoc/unipdf/v3/common/license"
 	"github.com/unidoc/unipdf/v3/creator"
+	"github.com/unidoc/unipdf/v3/model"
 )
 
 type Client struct {
@@ -92,6 +93,7 @@ var cellStyles = map[string]cellStyle{
 }
 
 func GenerateInvoicePdf(invoice Invoice) error {
+
 	conf, err := config.GetUniDocCred()
 	if err != nil {
 		return err
@@ -102,7 +104,13 @@ func GenerateInvoicePdf(invoice Invoice) error {
 		return err
 	}
 
+	font, err := model.NewCompositePdfFontFromTTFFile("./fonts/TakaoMincho.ttf")
+	if err != nil {
+		panic(err)
+	}
+
 	c := creator.New()
+	c.EnableFontSubsetting(font)
 	c.SetPageMargins(40, 40, 0, 0)
 
 	cr := &Client{creator: c}
@@ -149,8 +157,14 @@ func (c *Client) generatePdf(invoice Invoice) error {
 }
 
 func (c *Client) newPara(text string, textStyle creator.TextStyle) *creator.StyledParagraph {
+	font, err := model.NewCompositePdfFontFromTTFFile("./fonts/TakaoMincho.ttf")
+	if err != nil {
+		panic(err)
+	}
+
 	p := c.creator.NewStyledParagraph()
-	p.Append(text).Style = textStyle
+	style := &p.Append(text).Style
+	style.Font = font
 	p.SetEnableWrap(false)
 	return p
 }
